@@ -1,0 +1,17 @@
+%YAML 1.1
+---
+# Manual fallback config for one printer.
+# In farm mode this file is not copied directly; `/etc/ser2net.yaml` is generated
+# by `farm/klipper-farmctl.sh`.
+#
+# - Listen on TCP port 5000 (all interfaces).
+# - Bridge to the printer on /dev/ttyACM0 at 250000 8N1.
+# - Single client, kick existing client on reconnect.
+connection: &skr0
+  accepter: tcp,5000
+  timeout: 0
+  enable: on
+  connector: serialdev,/dev/ttyACM0,250000n81,local
+  options:
+    kickolduser: true
+    max-connections: 1
