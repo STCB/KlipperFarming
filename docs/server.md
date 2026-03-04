@@ -43,7 +43,9 @@ This host is the source of truth for:
 
 - List map: `klipper-farmctl map-list`
 - Prune disconnected identities: `klipper-farmctl map-prune`
+  (aborts if Pi discovery fails; also stops resources for removed mappings)
 - Reset map: `klipper-farmctl map-reset`
+  (also stops resources for all mapped indexes before clearing)
 
 ## PTY requirement
 

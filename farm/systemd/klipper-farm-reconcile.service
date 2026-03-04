@@ -1,0 +1,11 @@
+[Unit]
+Description=Klipper Farm reconcile run
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+Environment=CONFIG_FILE=/etc/klipper-farm/farm.env
+Environment=ALLOWLIST_FILE=/etc/klipper-farm/allowed_ipv4.txt
+ExecStart=/usr/bin/flock -n /run/klipper-farm-reconcile.lock /usr/local/bin/klipper-farmctl reconcile
+

@@ -20,7 +20,7 @@ and a bash orchestrator for running multiple isolated Klipper stacks from one se
 - `docs/` architecture/server/Pi notes.
 
 ## Quick start (farm mode)
-1. Flash MCU using `firmware/current/.config` (see `firmware/README.md`).
+1. Flash the SKR mini e3 v2.0's MCU using `firmware/current/.config` (see `firmware/README.md`).
 2. Configure Pi bridge host + SSH access (see `docs/rasp-zero.md`).
 3. Install and configure `farm/klipper-farmctl.sh` on the server (see `farm/README.md`).
 4. Run one reconcile, then enable the systemd timer.
@@ -31,3 +31,10 @@ and a bash orchestrator for running multiple isolated Klipper stacks from one se
 - `docs/rasp-zero.md`
 - `docs/case.md`
 - `farm/README.md`
+
+# History
+
+This project was first tried, and R&Ded with a single-board [Ethernet to Serial converter](https://aliexpress.com/item/4001175906764.html).
+
+The supposed benefit was easiness of deployment: changing the Klipper's firmware communication port to an available UART one, then the converter itself would expose it over LAN with a hardware "**ser2net**" equivalent.
+But problems arose: the Aliexpress converter has an inner latency of 150ms per way (in & out), so 300ms total per round-trip, and the SKR Mini e3 v2.0, flashed with Klipper set on "USART 2" port appears to simply not use its serial port for Klippy communication.

@@ -2,22 +2,22 @@
 set -euo pipefail
 
 # --- config ---
-ZERO_HOST="${ZERO_HOST:-192.168.1.66}"   # IP/hostname de la Pi Zero
-ZERO_PORT="${ZERO_PORT:-5000}"           # port ser2net
-LINK_PATH="${LINK_PATH:-/tmp/ttySKR0}"   # PTY local (simple pour test)
+ZERO_HOST="${ZERO_HOST:-192.168.1.66}"   # Pi Zero IP/hostname
+ZERO_PORT="${ZERO_PORT:-5000}"           # ser2net port
+LINK_PATH="${LINK_PATH:-/tmp/ttySKR0}"   # local PTY (simple for testing)
 LOG_PATH="${LOG_PATH:-/tmp/klipper-bridge.log}"
 
 # --- sanity checks ---
-command -v socat >/dev/null 2>&1 || { echo "socat introuvable. Installe: sudo apt install socat"; exit 1; }
-command -v nc >/dev/null 2>&1 || { echo "nc introuvable. Installe: sudo apt install netcat-openbsd"; exit 1; }
+command -v socat >/dev/null 2>&1 || { echo "socat not found. Install: sudo apt install socat"; exit 1; }
+command -v nc >/dev/null 2>&1 || { echo "nc not found. Install: sudo apt install netcat-openbsd"; exit 1; }
 
 echo "[bridge] Target: ${ZERO_HOST}:${ZERO_PORT}" | tee -a "$LOG_PATH"
 echo "[bridge] PTY: ${LINK_PATH}" | tee -a "$LOG_PATH"
 
-# Si un ancien PTY/link existe, on le dégage
+# If an old PTY/link exists, remove it
 rm -f "$LINK_PATH"
 
-# Attend que le port TCP soit joignable (évite de lancer socat dans le vide)
+# Wait until the TCP port is reachable (avoid launching socat into the void)
 for i in {1..30}; do
   if nc -z "$ZERO_HOST" "$ZERO_PORT" >/dev/null 2>&1; then
     echo "[bridge] TCP up" | tee -a "$LOG_PATH"
@@ -27,7 +27,7 @@ for i in {1..30}; do
   sleep 1
 done
 
-# Boucle: (re)lance socat si ça tombe
+# Loop: (re)start socat if it dies
 while true; do
   echo "[bridge] starting socat..." | tee -a "$LOG_PATH"
   if socat -d -d \
